@@ -19,13 +19,19 @@ canvas{
     left:0;
 }
 
+/* TEXTO MEJORADO */
 .texto{
     position:absolute;
     bottom:12%;
     width:100%;
     text-align:center;
-    font-size:28px;
-    color:#fff;
+    font-size:32px;
+    font-weight:600;
+    color:#ffd700; /* dorado */
+    text-shadow: 
+        0 0 10px rgba(255,215,0,0.8),
+        0 0 20px rgba(255,215,0,0.6),
+        2px 2px 8px rgba(0,0,0,0.8);
     opacity:0;
     animation: aparecer 6s ease forwards;
     animation-delay:2s;
@@ -54,7 +60,6 @@ canvas.height = window.innerHeight;
 let W = canvas.width;
 let H = canvas.height;
 
-// 🌳 Dibujar tronco realista
 function drawTree(){
     ctx.beginPath();
     ctx.moveTo(W/2, H);
@@ -64,7 +69,6 @@ function drawTree(){
     ctx.stroke();
 }
 
-// 💗 Dibujar corazones
 function drawHeart(x,y,size,color){
     ctx.fillStyle=color;
     ctx.beginPath();
@@ -74,7 +78,6 @@ function drawHeart(x,y,size,color){
     ctx.fill();
 }
 
-// Crear copa del árbol
 let hearts=[];
 for(let i=0;i<200;i++){
     hearts.push({
@@ -85,7 +88,6 @@ for(let i=0;i<200;i++){
     });
 }
 
-// 🌸 Pétalos sakura
 let petals=[];
 for(let i=0;i<80;i++){
     petals.push({
@@ -128,7 +130,6 @@ function animate(){
 }
 
 animate();
-
 </script>
 
 </body>

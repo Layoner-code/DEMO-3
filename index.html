@@ -4,12 +4,12 @@
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>Árbol de Amor</title>
-<style>
 
+<style>
 body{
     margin:0;
     overflow:hidden;
-    background: linear-gradient(to top, #1a0026, #3a005f);
+    background:#0d001a; /* Fondo oscuro liso */
     font-family: 'Segoe UI', sans-serif;
 }
 
@@ -19,7 +19,7 @@ canvas{
     left:0;
 }
 
-/* TEXTO MEJORADO */
+/* TEXTO */
 .texto{
     position:absolute;
     bottom:12%;
@@ -27,24 +27,23 @@ canvas{
     text-align:center;
     font-size:32px;
     font-weight:600;
-    color:#ffd700; /* dorado */
-    text-shadow: 
-        0 0 10px rgba(255,215,0,0.8),
-        0 0 20px rgba(255,215,0,0.6),
-        2px 2px 8px rgba(0,0,0,0.8);
+    color:#ffd700;
+    text-shadow:
+        0 0 8px rgba(255,215,0,0.7),
+        0 0 18px rgba(255,215,0,0.5),
+        2px 2px 10px rgba(0,0,0,0.9);
     opacity:0;
     animation: aparecer 6s ease forwards;
     animation-delay:2s;
-    letter-spacing:1px;
 }
 
 @keyframes aparecer{
-    0%{opacity:0; transform:translateY(20px);}
-    100%{opacity:1; transform:translateY(0);}
+    from{opacity:0; transform:translateY(20px);}
+    to{opacity:1; transform:translateY(0);}
 }
-
 </style>
 </head>
+
 <body>
 
 <canvas id="canvas"></canvas>
@@ -60,15 +59,17 @@ canvas.height = window.innerHeight;
 let W = canvas.width;
 let H = canvas.height;
 
+/* TRONCO */
 function drawTree(){
     ctx.beginPath();
     ctx.moveTo(W/2, H);
-    ctx.bezierCurveTo(W/2-50, H-200, W/2+50, H-350, W/2, H-500);
-    ctx.lineWidth = 25;
-    ctx.strokeStyle = "#3b1f0b";
+    ctx.bezierCurveTo(W/2-60, H-200, W/2+60, H-350, W/2, H-520);
+    ctx.lineWidth = 30;
+    ctx.strokeStyle = "#2b1408";
     ctx.stroke();
 }
 
+/* CORAZÓN */
 function drawHeart(x,y,size,color){
     ctx.fillStyle=color;
     ctx.beginPath();
@@ -78,18 +79,20 @@ function drawHeart(x,y,size,color){
     ctx.fill();
 }
 
+/* COPA */
 let hearts=[];
-for(let i=0;i<200;i++){
+for(let i=0;i<220;i++){
     hearts.push({
-        x: W/2 + (Math.random()*300 -150),
-        y: H-500 + (Math.random()*250 -125),
+        x: W/2 + (Math.random()*320 -160),
+        y: H-520 + (Math.random()*280 -140),
         size: Math.random()*6+4,
-        color: `hsl(${330+Math.random()*20}, 80%, ${60+Math.random()*20}%)`
+        color: `hsl(${330+Math.random()*20}, 85%, ${60+Math.random()*15}%)`
     });
 }
 
+/* PÉTALOS */
 let petals=[];
-for(let i=0;i<80;i++){
+for(let i=0;i<90;i++){
     petals.push({
         x: Math.random()*W,
         y: Math.random()*H,
@@ -100,12 +103,13 @@ for(let i=0;i<80;i++){
 }
 
 function drawPetal(p){
-    ctx.fillStyle="rgba(255,182,193,0.8)";
+    ctx.fillStyle="rgba(255,192,203,0.85)";
     ctx.beginPath();
     ctx.ellipse(p.x,p.y,p.size,p.size/2,Math.PI/4,0,2*Math.PI);
     ctx.fill();
 }
 
+/* ANIMACIÓN */
 function animate(){
     ctx.clearRect(0,0,W,H);
 

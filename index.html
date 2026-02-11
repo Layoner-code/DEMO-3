@@ -2,211 +2,133 @@
 <html lang="es">
 <head>
 <meta charset="UTF-8">
-<title>Para Siempre</title>
-
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Árbol de Amor</title>
 <style>
-html, body {
-  margin: 0;
-  padding: 0;
-  height: 100%;
-  background: radial-gradient(circle at top, #14071f, #000);
-  overflow: hidden;
-  font-family: 'Segoe UI', system-ui, sans-serif;
+
+body{
+    margin:0;
+    overflow:hidden;
+    background: linear-gradient(to top, #1a0026, #3a005f);
+    font-family: 'Segoe UI', sans-serif;
 }
 
-canvas { display: block; }
-
-/* OVERLAY TEXTO */
-.overlay {
-  position: absolute;
-  width: 100%;
-  text-align: center;
-  color: #f3c8dd;
-  pointer-events: none;
+canvas{
+    position:absolute;
+    top:0;
+    left:0;
 }
 
-.nombres {
-  top: 40px;
-  font-size: 32px;
-  letter-spacing: 3px;
-  text-shadow: 0 0 20px rgba(243,200,221,0.4);
+.texto{
+    position:absolute;
+    bottom:12%;
+    width:100%;
+    text-align:center;
+    font-size:28px;
+    color:#fff;
+    opacity:0;
+    animation: aparecer 6s ease forwards;
+    animation-delay:2s;
+    letter-spacing:1px;
 }
 
-.fecha {
-  top: 88px;
-  font-size: 14px;
-  opacity: 0.75;
+@keyframes aparecer{
+    0%{opacity:0; transform:translateY(20px);}
+    100%{opacity:1; transform:translateY(0);}
 }
 
-.contador {
-  top: 112px;
-  font-size: 16px;
-}
-
-.mensaje {
-  bottom: 110px;
-  font-size: 18px;
-  opacity: 0.9;
-}
-
-/* BOTÓN */
-.boton {
-  position: absolute;
-  bottom: 40px;
-  left: 50%;
-  transform: translateX(-50%);
-  background: rgba(255,255,255,0.08);
-  border: 1px solid rgba(255,255,255,0.25);
-  color: #fff;
-  padding: 12px 30px;
-  border-radius: 40px;
-  font-size: 14px;
-  cursor: pointer;
-  backdrop-filter: blur(6px);
-}
 </style>
 </head>
-
 <body>
 
 <canvas id="canvas"></canvas>
-
-<div class="overlay nombres">Ana & Luis</div>
-<div class="overlay fecha">Desde el 14 de Febrero de 2022</div>
-<div class="overlay contador" id="contador"></div>
-<div class="overlay mensaje" id="mensaje"></div>
-
-<button class="boton" onclick="playMusic()">🎵 Escuchar</button>
-<audio id="audio" src="musica.mp3"></audio>
+<div class="texto">Nuestro amor florece cada día 🌸💖</div>
 
 <script>
-/* CANVAS */
 const canvas = document.getElementById("canvas");
 const ctx = canvas.getContext("2d");
 
-function resize() {
-  canvas.width = window.innerWidth;
-  canvas.height = window.innerHeight;
-}
-resize();
-window.addEventListener("resize", resize);
+canvas.width = window.innerWidth;
+canvas.height = window.innerHeight;
 
-/* 🌸 SAKURA */
-class Sakura {
-  constructor() {
-    this.x = Math.random() * canvas.width;
-    this.y = -40;
-    this.size = Math.random() * 3 + 2;
-    this.speed = Math.random() * 0.6 + 0.3;
-    this.swing = Math.random() * 1.5;
-    this.angle = Math.random() * Math.PI;
-  }
-  draw() {
-    ctx.save();
-    ctx.translate(this.x, this.y);
-    ctx.rotate(this.angle);
-    ctx.fillStyle = "rgba(255,190,210,0.65)";
+let W = canvas.width;
+let H = canvas.height;
+
+// 🌳 Dibujar tronco realista
+function drawTree(){
     ctx.beginPath();
-    ctx.moveTo(0, 0);
-    ctx.bezierCurveTo(6, -6, 12, 4, 0, 12);
-    ctx.bezierCurveTo(-12, 4, -6, -6, 0, 0);
-    ctx.fill();
-    ctx.restore();
-  }
-  update() {
-    this.y += this.speed;
-    this.x += Math.sin(this.y / 60) * this.swing * 0.25;
-    this.angle += 0.004;
-  }
+    ctx.moveTo(W/2, H);
+    ctx.bezierCurveTo(W/2-50, H-200, W/2+50, H-350, W/2, H-500);
+    ctx.lineWidth = 25;
+    ctx.strokeStyle = "#3b1f0b";
+    ctx.stroke();
 }
-let sakuras = Array.from({ length: 28 }, () => new Sakura());
 
-/* ✨ LUCES */
-class Luz {
-  constructor() {
-    this.x = Math.random() * canvas.width;
-    this.y = Math.random() * canvas.height;
-    this.r = Math.random() * 2 + 1;
-    this.a = Math.random() * 0.4 + 0.2;
-  }
-  draw() {
-    ctx.fillStyle = `rgba(255,200,230,${this.a})`;
+// 💗 Dibujar corazones
+function drawHeart(x,y,size,color){
+    ctx.fillStyle=color;
     ctx.beginPath();
-    ctx.arc(this.x, this.y, this.r, 0, Math.PI * 2);
+    ctx.moveTo(x,y);
+    ctx.bezierCurveTo(x-size,y-size,x-2*size,y+size,x,y+2*size);
+    ctx.bezierCurveTo(x+2*size,y+size,x+size,y-size,x,y);
     ctx.fill();
-  }
-}
-const luces = Array.from({ length: 40 }, () => new Luz());
-
-/* 🌳 ÁRBOL CORAZÓN */
-function drawTree() {
-  ctx.save();
-  ctx.translate(canvas.width / 2, canvas.height - 140);
-  ctx.strokeStyle = "#36104f";
-  ctx.lineWidth = 5;
-  ctx.beginPath();
-  ctx.moveTo(0, 0);
-  ctx.lineTo(0, -190);
-  ctx.stroke();
-
-  ctx.fillStyle = "#6b2b91";
-  ctx.beginPath();
-  ctx.moveTo(0, -190);
-  ctx.bezierCurveTo(-130, -270, -130, -380, 0, -330);
-  ctx.bezierCurveTo(130, -380, 130, -270, 0, -190);
-  ctx.fill();
-  ctx.restore();
 }
 
-/* 🎬 ANIMACIÓN */
-function animate() {
-  ctx.clearRect(0, 0, canvas.width, canvas.height);
-  luces.forEach(l => l.draw());
-  sakuras.forEach((s, i) => {
-    s.draw(); s.update();
-    if (s.y > canvas.height) sakuras[i] = new Sakura();
-  });
-  drawTree();
-  requestAnimationFrame(animate);
+// Crear copa del árbol
+let hearts=[];
+for(let i=0;i<200;i++){
+    hearts.push({
+        x: W/2 + (Math.random()*300 -150),
+        y: H-500 + (Math.random()*250 -125),
+        size: Math.random()*6+4,
+        color: `hsl(${330+Math.random()*20}, 80%, ${60+Math.random()*20}%)`
+    });
 }
+
+// 🌸 Pétalos sakura
+let petals=[];
+for(let i=0;i<80;i++){
+    petals.push({
+        x: Math.random()*W,
+        y: Math.random()*H,
+        size: Math.random()*6+4,
+        speed: Math.random()*2+1,
+        drift: Math.random()*2-1
+    });
+}
+
+function drawPetal(p){
+    ctx.fillStyle="rgba(255,182,193,0.8)";
+    ctx.beginPath();
+    ctx.ellipse(p.x,p.y,p.size,p.size/2,Math.PI/4,0,2*Math.PI);
+    ctx.fill();
+}
+
+function animate(){
+    ctx.clearRect(0,0,W,H);
+
+    drawTree();
+
+    hearts.forEach(h=>{
+        drawHeart(h.x,h.y,h.size,h.color);
+    });
+
+    petals.forEach(p=>{
+        drawPetal(p);
+        p.y+=p.speed;
+        p.x+=p.drift;
+
+        if(p.y>H){
+            p.y=-10;
+            p.x=Math.random()*W;
+        }
+    });
+
+    requestAnimationFrame(animate);
+}
+
 animate();
 
-/* ⏱ CONTADOR */
-const inicio = new Date("2022-02-14");
-function actualizarContador() {
-  const ahora = new Date();
-  const diff = ahora - inicio;
-  const dias = Math.floor(diff / (1000 * 60 * 60 * 24));
-  document.getElementById("contador").innerText =
-    `${dias} días compartiendo este amor`;
-}
-actualizarContador();
-setInterval(actualizarContador, 60000);
-
-/* ✍️ TEXTO LETRA POR LETRA */
-const texto = "Nuestro  amor  florece  incluso  en  silencio.";
-let i = 0;
-function escribir() {
-  if (i < texto.length) {
-    document.getElementById("mensaje").innerText += texto.charAt(i);
-    i++;
-    setTimeout(escribir, 70);
-  }
-}
-setTimeout(escribir, 1500);
-
-/* 🎵 MÚSICA FADE */
-function playMusic() {
-  const audio = document.getElementById("audio");
-  audio.volume = 0;
-  audio.play();
-  let v = 0;
-  const fade = setInterval(() => {
-    v += 0.02;
-    audio.volume = Math.min(v, 1);
-    if (v >= 1) clearInterval(fade);
-  }, 100);
-}
 </script>
 
 </body>
